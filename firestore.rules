@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: assessments
+    // Document ID: assessmentId
+    // Fields:
+    //   - id: string (required)
+    //   - type: string (required, 'chemical' | 'noise')
+    //   - status: string (required, 'open' | 'completed')
+    //   - createdAt: number (required)
+    //   - startTime: string
+    //   - workerName: string (required)
+    //   - userId: string (required) - Owner of the assessment
+    //   - ... other fields
+    //
+    // Collection: users
+    // Document ID: userId
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required)
+    //   - role: string ('admin' | 'user')
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "felipeoliveira0211@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    function isValidAssessment(data) {
+      return data.id is string &&
+             data.type in ['chemical', 'noise'] &&
+             data.status in ['open', 'completed'] &&
+             data.createdAt is number &&
+             data.workerName is string && data.workerName.size() < 200 &&
+             data.userId == request.auth.uid;
+    }
+
+    function isValidUser(data) {
+      return data.uid == request.auth.uid &&
+             isValidEmail(data.email) &&
+             (!('role' in data) || data.role in ['admin', 'user']);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data) && (!('role' in request.resource.data) || request.resource.data.role == 'user');
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && (request.resource.data.role == resource.data.role || isAdmin());
+    }
+
+    match /assessments/{assessmentId} {
+      allow read, write: if true;
+    }
+
+    match /companies/{id} {
+      allow read, write: if true;
+    }
+
+    match /equipments/{id} {
+      allow read, write: if true;
+    }
+
+    match /responsibles/{id} {
+      allow read, write: if true;
+    }
+  }
+}

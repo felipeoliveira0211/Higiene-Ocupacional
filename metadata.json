@@ -1,0 +1,6 @@
+{
+  "name": "Higiene Ocupacional - Folha de Campo",
+  "description": "Aplicativo para preenchimento de folhas de campo de higiene ocupacional (Agentes Químicos e Ruído) com assinatura digital e geração de relatórios.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
