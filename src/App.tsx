@@ -9,7 +9,7 @@ import { ChemicalForm } from './components/ChemicalForm';
 import { NoiseForm } from './components/NoiseForm';
 import { Registrations } from './components/Registrations';
 import { Assessment } from './types';
-import { Button } from './components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Plus, ClipboardList, LogOut, LogIn, Settings } from 'lucide-react';
 import { auth, db } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';

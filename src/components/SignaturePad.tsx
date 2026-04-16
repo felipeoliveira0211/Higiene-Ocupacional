@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { RotateCcw, Check } from 'lucide-react';
 
 interface SignaturePadProps {

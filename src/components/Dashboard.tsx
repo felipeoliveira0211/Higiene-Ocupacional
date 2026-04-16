@@ -1,7 +1,7 @@
 import { Assessment } from '../types';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Clock, User, HardDrive, ArrowRight, CheckCircle2, AlertCircle, ClipboardList, Trash2 } from 'lucide-react';
 import { formatDistance, differenceInMinutes, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';

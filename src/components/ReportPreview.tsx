@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChemicalAssessment, NoiseAssessment } from '../types';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { Share2, Download } from 'lucide-react';
 import { shareChemicalPDF, generateChemicalPDF, shareNoisePDF, generateNoisePDF } from '../lib/pdfGenerator';
 
